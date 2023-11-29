@@ -23,11 +23,9 @@ class TestSearch(unittest.TestCase):
 
 
 def binary_search(items: List[int], find: int):
-    step = 0
     left, right = 0, len(items) - 1
     while left <= right:
         mid = (left + right) // 2
-        step += 1
         if find > items[mid]:
             left = mid + 1
         elif find < items[mid]:
@@ -38,9 +36,7 @@ def binary_search(items: List[int], find: int):
 
 
 def linear_search(items: List[int], find: int):
-    step = 0
     for idx, item in enumerate(items):
-        step += 1
         if item == find:
             return idx
     return None
