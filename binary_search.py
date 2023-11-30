@@ -6,20 +6,23 @@ return index when found otherwise None
 
 import unittest
 from typing import List
+from random import choice
 
 
 class TestSearch(unittest.TestCase):
     def test_found(self):
-        arr = [x for x in range(1, 101)]
-        find, idx = 78, 77
-        self.assertEqual(linear_search(arr, find), idx)
-        self.assertEqual(binary_search(arr, find), idx)
+        arr = list(range(100))
+        x = choice(arr)
+        x_idx = arr.index(x)
+
+        self.assertEqual(linear_search(arr, x), x_idx)
+        self.assertEqual(binary_search(arr, x), x_idx)
 
     def test_not_found(self):
-        arr = [x for x in range(1, 10)]
-        find, idx = 78, None
-        self.assertEqual(linear_search(arr, find), idx)
-        self.assertEqual(binary_search(arr, find), idx)
+        arr = list(range(10))
+        x, x_idx = 78, None
+        self.assertEqual(linear_search(arr, x), x_idx)
+        self.assertEqual(binary_search(arr, x), x_idx)
 
 
 def binary_search(items: List[int], find: int):
