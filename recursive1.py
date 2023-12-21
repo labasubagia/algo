@@ -23,6 +23,9 @@ class TestCase(unittest.TestCase):
         result2 = sorted(get_related_product_recursive(products, "E"))
         self.assertEqual(result2, sorted(set(["DE", "D", "E"])))
 
+        result3 = sorted(get_related_product_recursive(products, "C"))
+        self.assertEqual(result3, sorted(set(["AB", "A", "B", "BC", "B", "C"])))
+
     def test_related_2(self):
         products = [
             ["AB", "A"],
