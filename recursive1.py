@@ -17,14 +17,16 @@ class TestCase(unittest.TestCase):
             ["DE", "D"],
             ["DE", "E"],
         ]
-        result1 = sorted(get_related_product_recursive(products, "AB"))
-        self.assertEqual(result1, sorted(set(["AB", "A", "B", "BC", "B", "C"])))
 
-        result2 = sorted(get_related_product_recursive(products, "E"))
-        self.assertEqual(result2, sorted(set(["DE", "D", "E"])))
+        test_cases = [
+            ("AB", ["AB", "A", "B", "BC", "B", "C"]),
+            ("E", ["DE", "D", "E"]),
+            ("C", ["AB", "A", "B", "BC", "B", "C"]),
+        ]
 
-        result3 = sorted(get_related_product_recursive(products, "C"))
-        self.assertEqual(result3, sorted(set(["AB", "A", "B", "BC", "B", "C"])))
+        for target, expected in test_cases:
+            result = get_related_product_recursive(products, target)
+            self.assertEqual(sorted(result), sorted(set(expected)))
 
     def test_related_2(self):
         products = [
@@ -35,14 +37,16 @@ class TestCase(unittest.TestCase):
             ["EF", "E"],
             ["EF", "F"],
         ]
-        result1 = sorted(get_related_product_recursive(products, "B"))
-        self.assertEqual(result1, sorted(set(["AB", "A", "B"])))
 
-        result2 = sorted(get_related_product_recursive(products, "CD"))
-        self.assertEqual(result2, sorted(set(["CD", "C", "D"])))
+        test_cases = [
+            ("B", ["AB", "A", "B"]),
+            ("CD", ["CD", "C", "D"]),
+            ("F", ["EF", "E", "F"]),
+        ]
 
-        result3 = sorted(get_related_product_recursive(products, "F"))
-        self.assertEqual(result3, sorted(set(["EF", "E", "F"])))
+        for target, expected in test_cases:
+            result = get_related_product_recursive(products, target)
+            self.assertEqual(sorted(result), sorted(set(expected)))
 
 
 def get_related_product_recursive(
