@@ -11,27 +11,22 @@ type Bundle struct {
 }
 
 func main() {
-	bundles := []Bundle{
-		{SKU: "AB", ChildSKU: "A"},
-		{SKU: "AB", ChildSKU: "B"},
-
-		{SKU: "BC", ChildSKU: "B"},
-		{SKU: "BC", ChildSKU: "C"},
-
-		{SKU: "DE", ChildSKU: "D"},
-		{SKU: "DE", ChildSKU: "E"},
-
-		{SKU: "ABC", ChildSKU: "A"},
-		{SKU: "ABC", ChildSKU: "B"},
-		{SKU: "ABC", ChildSKU: "C"},
-
-		{SKU: "ABCD", ChildSKU: "A"},
-		{SKU: "ABCD", ChildSKU: "B"},
-		{SKU: "ABCD", ChildSKU: "C"},
-		{SKU: "ABCD", ChildSKU: "D"},
+	bundles := []Bundle{}
+	for r := 'A'; r < 'Z'; r++ {
+		p := fmt.Sprintf("%c", r)
+		n := fmt.Sprintf("%c", r+1)
+		bundles = append(bundles, Bundle{
+			SKU:      fmt.Sprintf("%v%v", p, n),
+			ChildSKU: p,
+		})
+		bundles = append(bundles, Bundle{
+			SKU:      fmt.Sprintf("%v%v", p, n),
+			ChildSKU: n,
+		})
 	}
+	fmt.Printf("%+v\n", bundles)
 
-	related := findRelated(bundles, []string{"A", "C", "D", "E"})
+	related := findRelated(bundles, []string{"A", "B", "C", "D"})
 	listRelated := []string{}
 	for SKU := range related {
 		listRelated = append(listRelated, SKU)
