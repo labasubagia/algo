@@ -1,9 +1,8 @@
 package main
 
 import (
-	"reflect"
+	"fmt"
 	"sort"
-	"testing"
 )
 
 type Bundle struct {
@@ -11,8 +10,7 @@ type Bundle struct {
 	ChildSKU string
 }
 
-// https://go.dev/play/p/iKACFpYdYxk
-func TestFindRelated(t *testing.T) {
+func main() {
 	bundles := []Bundle{
 		{SKU: "AB", ChildSKU: "A"},
 		{SKU: "AB", ChildSKU: "B"},
@@ -32,46 +30,61 @@ func TestFindRelated(t *testing.T) {
 		{SKU: "ABCD", ChildSKU: "C"},
 		{SKU: "ABCD", ChildSKU: "D"},
 	}
-	target := "A"
-	expected := []string{"AB", "BC", "DE", "ABC", "ABCD", "A", "B", "C", "D"}
 
-	related, _ := findRelated(bundles, target, nil)
-	actual := []string{}
+	related := findRelated(bundles, []string{"A", "C", "D", "E"})
+	listRelated := []string{}
 	for SKU := range related {
-		actual = append(actual, SKU)
+		listRelated = append(listRelated, SKU)
 	}
-	sort.Strings(actual)
-
-	if !reflect.DeepEqual(actual, expected) {
-		t.Errorf("test related failed")
-	}
+	sort.Strings(listRelated)
+	fmt.Println(listRelated)
 }
 
-func findRelated(bundles []Bundle, target string, visited map[string]bool) (map[string]bool, int) {
+func findRelated(bundles []Bundle, SKUs []string) map[string]bool {
+	mapResult := map[string]map[string]bool{}
+	for _, SKU := range SKUs {
+		result, ok := mapResult[SKU]
+		if !ok {
+			result = findRelatedPerSKU(bundles, SKU, nil)
+			for SKU := range result {
+				mapResult[SKU] = result
+			}
+			fmt.Printf("%v new\n", SKU)
+		} else {
+			fmt.Printf("%v cached\n", SKU)
+		}
+	}
+
+	result := map[string]bool{}
+	for _, item := range mapResult {
+		for SKU := range item {
+			result[SKU] = true
+		}
+	}
+	return result
+}
+
+func findRelatedPerSKU(bundles []Bundle, target string, visited map[string]bool) map[string]bool {
 	if visited == nil {
 		visited = map[string]bool{}
 	}
 
 	related := map[string]bool{}
-	step := 0
 	for _, bundle := range bundles {
 		var nextRelated map[string]bool
-		var nextStep int
 		if bundle.SKU == target && !visited[bundle.ChildSKU] {
 			visited[bundle.ChildSKU] = true
 			related[bundle.ChildSKU] = true
-			nextRelated, nextStep = findRelated(bundles, bundle.ChildSKU, visited)
+			nextRelated = findRelatedPerSKU(bundles, bundle.ChildSKU, visited)
 		} else if bundle.ChildSKU == target && !visited[bundle.SKU] {
 			visited[bundle.SKU] = true
 			related[bundle.SKU] = true
-			nextRelated, nextStep = findRelated(bundles, bundle.SKU, visited)
+			nextRelated = findRelatedPerSKU(bundles, bundle.SKU, visited)
 		}
 		for SKU := range nextRelated {
 			related[SKU] = true
 		}
-		step++
-		step += nextStep
 
 	}
-	return related, step
+	return related
 }
