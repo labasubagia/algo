@@ -5,10 +5,27 @@ import random
 
 class TestCase(unittest.TestCase):
     def test_is_subset(self):
-        arr1 = list(range(3))
+        arr1 = list(range(1000))
         random.shuffle(arr1)
 
-        arr2 = list(range(200))
+        arr2 = list(range(2000))
+        random.shuffle(arr2)
+
+        expected = set(arr1).issubset(arr2)
+
+        actual1, step1 = is_subset1(arr1, arr2)
+        self.assertEqual(expected, actual1)
+
+        actual2, step2 = is_subset2(arr1, arr2)
+        self.assertEqual(expected, actual2)
+
+        print(step1, step2)
+
+    def test_is_not_subset(self):
+        arr1 = list(range(1000))
+        random.shuffle(arr1)
+
+        arr2 = list(range(1001, 2000))
         random.shuffle(arr2)
 
         expected = set(arr1).issubset(arr2)
