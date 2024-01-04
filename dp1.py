@@ -19,7 +19,10 @@ class TestCase(unittest.TestCase):
         actual2, step2 = fib2(n)
         self.assertEqual(expected, actual2)
 
-        print(step1, step2)
+        actual3, step3 = fib3(n)
+        self.assertEqual(expected, actual3)
+
+        print(step1, step2, step3)
 
 
 def fib(n: int) -> int | float:
@@ -44,6 +47,19 @@ def fib2(n: int, memo: dict[int, int] = {0: 0, 1: 1}, step: int = 0) -> tuple[in
         f2, step = fib2(n - 1, memo, step)
         memo[n] = f1 + f2
     return memo[n], step
+
+
+# bottom-up DP
+def fib3(n: int) -> tuple[int, int]:
+    step: int = 1
+    a = 0
+    b = 1
+    for _ in range(1, n):
+        step += 1
+        tmp = a
+        a = b
+        b = tmp + a
+    return b, step
 
 
 if __name__ == "__main__":
