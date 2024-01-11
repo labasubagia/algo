@@ -12,6 +12,20 @@ class TestCase(unittest.TestCase):
 
         self.assertEqual(sorted(arr), sortable_arr.array)
 
+    def test_select(self):
+        arr = [0, 50, 20, 5, 10, 60, 30]
+        sortable_arr = SortableArray(arr)
+
+        # find 2nd lowest
+        th = 1
+        actual = sortable_arr.quick_select(th, 0, len(sortable_arr.array) - 1)
+        self.assertEqual(sorted(arr)[th], actual)
+
+        # find 5th lowest value
+        th = 4
+        actual = sortable_arr.quick_select(th, 0, len(sortable_arr.array) - 1)
+        self.assertEqual(sorted(arr)[th], actual)
+
 
 class SortableArray:
     def __init__(self, array: list[int]):
@@ -72,6 +86,24 @@ class SortableArray:
 
         # recursive right side
         self.quicksort(pivot_index + 1, right_index)
+
+    def quick_select(
+        self, kth_lowest_value: int, left_index: int, right_index: int
+    ) -> int:
+        # one cell sub array as base case
+        if right_index - left_index <= 0:
+            return self.array[left_index]
+
+        # partition index
+        pivot_index = self.partition(left_index, right_index)
+
+        # k th lowest, e.g 2nd lowest
+        if kth_lowest_value < pivot_index:
+            return self.quick_select(kth_lowest_value, left_index, pivot_index - 1)
+        elif kth_lowest_value > pivot_index:
+            return self.quick_select(kth_lowest_value, pivot_index + 1, right_index)
+        else:
+            return self.array[pivot_index]
 
 
 if __name__ == "__main__":
