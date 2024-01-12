@@ -84,6 +84,17 @@ class LinkedList:
             print(tmp.val)
             tmp = tmp.next
 
+    def reverse(self):
+        curr = self.head
+        prev: Node | None = None
+        next: Node | None = None
+        while curr:
+            next = curr.next
+            curr.next = prev
+            prev = curr
+            curr = next
+        self.head = prev
+
 
 class Node:
     def __init__(self, val: int, next: Node | None = None) -> None:
@@ -99,6 +110,5 @@ if __name__ == "__main__":
     ll.append(Node(4))
     ll.append(Node(5))
 
-    ll.delete_at_index(0)
-
+    ll.reverse()
     ll.traverse()

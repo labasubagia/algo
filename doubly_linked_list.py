@@ -40,6 +40,18 @@ class DoublyLinkedList:
                 self.tail = self.head
             return removed
 
+    def traverse_backward(self):
+        curr = self.tail
+        while curr:
+            print(curr.val)
+            curr = curr.prev
+
+    def traverse_forward(self):
+        curr = self.head
+        while curr:
+            print(curr.val)
+            curr = curr.next
+
 
 class Node:
     def __init__(
@@ -51,11 +63,18 @@ class Node:
 
 
 if __name__ == "__main__":
-    q = Queue()
-    q.enqueue(1)
-    q.enqueue(2)
-    q.enqueue(3)
+    # q = Queue()
+    # q.enqueue(1)
+    # q.enqueue(2)
+    # q.enqueue(3)
 
-    print(q.dequeue())
+    # print(q.dequeue())
+    # print(q.data.__dict__)
 
-    print(q.data.__dict__)
+    ll = DoublyLinkedList()
+    ll.insert_at_end(1)
+    ll.insert_at_end(2)
+    ll.insert_at_end(3)
+
+    ll.traverse_backward()
+    ll.traverse_forward()
