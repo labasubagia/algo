@@ -82,12 +82,37 @@ def lift(node: Optional[TreeNode], node_to_delete: TreeNode):
     return node.right
 
 
-def traverse_and_print(node: Optional[TreeNode]):
+def find_greatest(node: Optional[TreeNode]) -> Optional[TreeNode]:
+    if not node:
+        return None
+
+    if node.right:
+        return find_greatest(node.right)
+    return node
+
+
+def traverse_inorder(node: Optional[TreeNode]):
     if not node:
         return
-    traverse_and_print(node.left)
+    traverse_inorder(node.left)
     print(node.val, end=" ")
-    traverse_and_print(node.right)
+    traverse_inorder(node.right)
+
+
+def traverse_preorder(node: Optional[TreeNode]):
+    if not node:
+        return
+    print(node.val, end=" ")
+    traverse_preorder(node.left)
+    traverse_preorder(node.right)
+
+
+def traverse_postorder(node: Optional[TreeNode]):
+    if not node:
+        return
+    traverse_postorder(node.left)
+    traverse_postorder(node.right)
+    print(node.val, end=" ")
 
 
 if __name__ == "__main__":
@@ -139,8 +164,16 @@ if __name__ == "__main__":
 
     insert(tree, 83)
     delete(tree, 50)
-    x = search(tree, 83)
-    if x:
-        print(x.__dict__)
+    found = search(tree, 83)
+    if found:
+        print(found.__dict__)
 
-    traverse_and_print(tree)
+    greatest = find_greatest(tree)
+    if greatest:
+        print(greatest.__dict__)
+
+    traverse_inorder(tree)
+    print()
+    traverse_preorder(tree)
+    print()
+    traverse_postorder(tree)
