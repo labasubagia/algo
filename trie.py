@@ -77,23 +77,22 @@ class Trie:
                 self.traverse(child_node)
 
 
-def gen():
-    words = sorted(["act", "cat", "bat", "batter", "bad", "catnip", "catnap"])
-    trie = Trie()
-    for word in words:
-        trie.insert(word)
-    return (trie, words.copy())
-
-
 class TestCase(unittest.TestCase):
 
+    def gen(self):
+        words = sorted(["act", "cat", "bat", "batter", "bad", "catnip", "catnap"])
+        trie = Trie()
+        for word in words:
+            trie.insert(word)
+        return (trie, words.copy())
+
     def test_trie(self):
-        trie, words = gen()
+        trie, words = self.gen()
         actual = trie.collectAllWords(words=[])
         self.assertEqual(words, actual)
 
     def test_auto_complete(self):
-        trie, words = gen()
+        trie, words = self.gen()
 
         prefix = "cat"
         autocomplete = trie.auto_complete(prefix)
@@ -103,11 +102,11 @@ class TestCase(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     def test_traverse(self):
-        trie, _ = gen()
+        trie, _ = self.gen()
         trie.traverse()
 
     def test_auto_correct(self):
-        trie, words = gen()
+        trie, words = self.gen()
         prefix = "car"
         expected = [word for word in words if word.startswith("ca")]
         actual = trie.auto_correct(prefix)
