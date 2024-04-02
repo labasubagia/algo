@@ -57,6 +57,13 @@ class Trie:
             return []
         return self.collectAllWords(current_node)
 
+    def traverse(self, node: TrieNode | None = None):
+        current_node = node or self.root
+        for key, child_node in current_node.children.items():
+            print(key, end="")
+            if key != "*":
+                self.traverse(child_node)
+
 
 class TestCase(unittest.TestCase):
     def __init__(self, methodName: str = "runTest") -> None:
@@ -81,6 +88,13 @@ class TestCase(unittest.TestCase):
         expected = sorted([word for word in words if word.startswith(prefix)])
         actual = sorted([prefix + suffix for suffix in autocomplete])
         self.assertEqual(expected, actual)
+
+    def test_traverse(self):
+        words = sorted(["act", "cat", "bat", "batter", "bad", "catnip", "catnap"])
+        trie = Trie()
+        for word in words:
+            trie.insert(word)
+        trie.traverse()
 
 
 if __name__ == "__main__":
