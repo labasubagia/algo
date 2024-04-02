@@ -51,11 +51,23 @@ class Trie:
                 self.collectAllWords(child_node, word + key, words)
         return words
 
-    def autocomplete(self, prefix: str) -> list[str]:
+    def auto_complete(self, prefix: str) -> list[str]:
         current_node = self.search(prefix)
         if not current_node:
             return []
-        return self.collectAllWords(current_node)
+        return self.collectAllWords(current_node, word="", words=[])
+
+    def auto_correct(self, prefix: str) -> list[str]:
+        current_node = self.root
+        longestSameChar = ""
+        for char in prefix:
+            if current_node and current_node.children.get(char):
+                longestSameChar += char
+                current_node = current_node.children[char]
+            else:
+                break
+        result = self.collectAllWords(current_node, word="", words=[])
+        return [longestSameChar + suffix for suffix in result]
 
     def traverse(self, node: TrieNode | None = None):
         current_node = node or self.root
@@ -65,36 +77,41 @@ class Trie:
                 self.traverse(child_node)
 
 
+def gen():
+    words = sorted(["act", "cat", "bat", "batter", "bad", "catnip", "catnap"])
+    trie = Trie()
+    for word in words:
+        trie.insert(word)
+    return (trie, words.copy())
+
+
 class TestCase(unittest.TestCase):
-    def __init__(self, methodName: str = "runTest") -> None:
-        super().__init__(methodName)
 
     def test_trie(self):
-        words = ["act", "cat", "bat", "batter", "bad", "catnip", "catnap"]
-        trie = Trie()
-        for word in words:
-            trie.insert(word)
-        words = trie.collectAllWords()
-        self.assertEqual(sorted(words), sorted(words))
+        trie, words = gen()
+        actual = trie.collectAllWords(words=[])
+        self.assertEqual(words, actual)
 
-    def test_autocomplete(self):
-        words = sorted(["act", "cat", "bat", "batter", "bad", "catnip", "catnap"])
-        trie = Trie()
-        for word in words:
-            trie.insert(word)
+    def test_auto_complete(self):
+        trie, words = gen()
+
         prefix = "cat"
-        autocomplete = trie.autocomplete(prefix)
+        autocomplete = trie.auto_complete(prefix)
 
         expected = sorted([word for word in words if word.startswith(prefix)])
         actual = sorted([prefix + suffix for suffix in autocomplete])
         self.assertEqual(expected, actual)
 
     def test_traverse(self):
-        words = sorted(["act", "cat", "bat", "batter", "bad", "catnip", "catnap"])
-        trie = Trie()
-        for word in words:
-            trie.insert(word)
+        trie, _ = gen()
         trie.traverse()
+
+    def test_auto_correct(self):
+        trie, words = gen()
+        prefix = "car"
+        expected = [word for word in words if word.startswith("ca")]
+        actual = trie.auto_correct(prefix)
+        self.assertEqual(expected, actual)
 
 
 if __name__ == "__main__":
