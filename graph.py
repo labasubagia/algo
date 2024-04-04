@@ -1,4 +1,5 @@
 from typing_extensions import Self
+from collections import deque
 
 
 class Vertex:
@@ -37,6 +38,37 @@ def dfs_search(
     return None
 
 
+def bfs_traverse(vertex: Vertex):
+    visited_vertices: dict[str, bool] = {}
+    queue: deque[Vertex] = deque([vertex])
+    while queue:
+        current_vertex = queue.popleft()
+        if current_vertex.value not in visited_vertices:
+            visited_vertices[current_vertex.value] = True
+            print(current_vertex.value)
+        for adjacent_vertex in current_vertex.adjacent_vertices:
+            if adjacent_vertex.value in visited_vertices:
+                continue
+            queue.append(adjacent_vertex)
+
+
+def bfs_search(vertex: Vertex, search_value: str) -> Vertex | None:
+    visited_vertices: dict[str, bool] = {}
+    queue: deque[Vertex] = deque([vertex])
+    while queue:
+        current_vertex = queue.popleft()
+        visited_vertices[current_vertex.value] = True
+        if current_vertex.value == search_value:
+            return current_vertex
+        for adjacent_vertex in current_vertex.adjacent_vertices:
+            if adjacent_vertex.value in visited_vertices:
+                continue
+            visited_vertices[adjacent_vertex.value] = True
+            queue.append(adjacent_vertex)
+
+    return None
+
+
 if __name__ == "__main__":
     alice = Vertex("alice")
     bob = Vertex("bob")
@@ -63,6 +95,14 @@ if __name__ == "__main__":
     gina.add_adjacent_vertex(irena)
 
     dfs_traverse(alice)
+    print()
 
     print(dfs_search(alice, "irena"))
     print(dfs_search(alice, "ilene"))
+    print()
+
+    bfs_traverse(alice)
+    print()
+
+    print(bfs_search(alice, "irena"))
+    print(bfs_search(alice, "ilene"))
